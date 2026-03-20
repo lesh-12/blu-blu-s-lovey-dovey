@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You, My Love 💌</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fdf6ee;
+    --blush: #f2c4c4;
+    --rose: #c0687a;
+    --deep-rose: #8b3a4a;
+    --gold: #c9a96e;
+    --ink: #2c1f1f;
+    --soft: #f9eeee;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    font-family: 'Montserrat', sans-serif;
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Petal rain */
+  .petals-container {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 0; overflow: hidden;
+  }
+  .petal {
+    position: absolute; top: -30px;
+    font-size: 1.2rem;
+    animation: fall linear infinite;
+    opacity: 0.6;
+  }
+  @keyframes fall {
+    0% { transform: translateY(-30px) rotate(0deg) translateX(0); opacity: 0.7; }
+    100% { transform: translateY(110vh) rotate(720deg) translateX(40px); opacity: 0; }
+  }
+
+  /* Nav */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(253,246,238,0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--blush);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem; color: var(--deep-rose);
+    letter-spacing: 0.04em;
+  }
+  .nav-tabs { display: flex; gap: 0.25rem; }
+  .tab-btn {
+    background: none; border: none; cursor: pointer;
+    padding: 0.5rem 1.1rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.78rem; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink); opacity: 0.5;
+    border-radius: 2rem;
+    transition: all 0.2s;
+  }
+  .tab-btn.active, .tab-btn:hover {
+    background: var(--blush); opacity: 1; color: var(--deep-rose);
+  }
+
+  /* Pages */
+  .page { display: none; min-height: calc(100vh - 64px); padding: 3rem 2rem; position: relative; z-index: 1; }
+  .page.active { display: block; animation: fadeIn 0.4s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  .page-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 300; color: var(--deep-rose);
+    text-align: center; margin-bottom: 0.4rem;
+    letter-spacing: 0.02em;
+  }
+  .page-subtitle {
+    text-align: center; font-size: 0.8rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--rose);
+    margin-bottom: 2.5rem; opacity: 0.7;
+  }
+
+  /* ── LETTER PAGE ── */
+  .letter-wrap {
+    max-width: 680px; margin: 0 auto;
+  }
+  .letter-paper {
+    background: white;
+    border: 1px solid var(--blush);
+    border-radius: 4px;
+    padding: 2.5rem;
+    box-shadow: 0 4px 30px rgba(192,104,122,0.08), 0 1px 6px rgba(0,0,0,0.04);
+    position: relative;
+  }
+  .letter-paper::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, var(--blush), var(--gold), var(--blush));
+    border-radius: 4px 4px 0 0;
+  }
+  .letter-field {
+    width: 100%; border: none; outline: none;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem; line-height: 1.9;
+    color: var(--ink); background: transparent;
+    resize: none;
+  }
+  .letter-header { display: flex; justify-content: space-between; margin-bottom: 1.5rem; }
+  .letter-date { font-size: 0.8rem; letter-spacing: 0.08em; color: var(--gold); font-family: 'Montserrat', sans-serif; }
+  .letter-to-wrap input {
+    border: none; outline: none;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem; color: var(--deep-rose);
+    background: transparent; width: 200px;
+  }
+  .letter-sep { border: none; border-top: 1px dashed var(--blush); margin: 1rem 0; }
+  .letter-body { width: 100%; height: 220px; }
+  .letter-footer { display: flex; justify-content: flex-end; margin-top: 1.5rem; }
+  .letter-sig input { text-align: right; border: none; outline: none; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.2rem; color: var(--deep-rose); background: transparent; }
+
+  .send-btn {
+    display: block; width: 100%;
+    margin-top: 1.5rem;
+    padding: 0.9rem;
+    background: var(--deep-rose);
+    color: white; border: none; cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.78rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase;
+    border-radius: 2px;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .send-btn:hover { background: var(--rose); transform: translateY(-1px); }
+  .send-btn:active { transform: translateY(0); }
+
+  /* Sent letters */
+  .letters-list { margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem; }
+  .letter-card {
+    background: white; border: 1px solid var(--blush); border-radius: 4px;
+    padding: 1.4rem 1.6rem; cursor: pointer;
+    transition: box-shadow 0.2s;
+    position: relative; overflow: hidden;
+  }
+  .letter-card::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    background: var(--rose);
+  }
+  .letter-card:hover { box-shadow: 0 4px 20px rgba(192,104,122,0.12); }
+  .letter-card-to { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.4rem; }
+  .letter-card-preview { font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: var(--ink); opacity: 0.7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .letter-card-date { font-size: 0.72rem; color: var(--ink); opacity: 0.35; margin-top: 0.5rem; }
+  .delete-btn {
+    position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);
+    background: none; border: none; cursor: pointer; color: var(--blush); font-size: 1.1rem;
+    transition: color 0.2s;
+  }
+  .delete-btn:hover { color: var(--rose); }
+
+  /* Modal */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(44,31,31,0.45); backdrop-filter: blur(4px);
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; animation: fadeIn 0.25s ease; }
+  .modal {
+    background: white; max-width: 560px; width: 90%;
+    border-radius: 4px; padding: 2.5rem;
+    position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  }
+  .modal-close {
+    position: absolute; top: 1rem; right: 1rem;
+    background: none; border: none; cursor: pointer; color: var(--blush); font-size: 1.4rem;
+    transition: color 0.2s;
+  }
+  .modal-close:hover { color: var(--rose); }
+  .modal-to { font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+  .modal-body { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; line-height: 1.9; color: var(--ink); white-space: pre-wrap; }
+  .modal-sig { text-align: right; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.2rem; color: var(--deep-rose); margin-top: 1.2rem; }
+
+  /* ── PHOTOS PAGE ── */
+  .photos-wrap { max-width: 800px; margin: 0 auto; }
+  .upload-zone {
+    border: 2px dashed var(--blush); border-radius: 6px;
+    padding: 3rem 2rem; text-align: center; cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    background: rgba(242,196,196,0.06);
+  }
+  .upload-zone:hover { border-color: var(--rose); background: rgba(242,196,196,0.12); }
+  .upload-zone .upload-icon { font-size: 2.5rem; margin-bottom: 0.8rem; }
+  .upload-zone p { font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--rose); opacity: 0.7; }
+  #file-input { display: none; }
+
+  .photo-caption-wrap { max-width: 500px; margin: 1.2rem auto 0; display: none; }
+  .photo-caption-wrap input {
+    width: 100%; border: 1px solid var(--blush); border-radius: 2px; padding: 0.7rem 1rem;
+    font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: var(--ink);
+    outline: none; background: white;
+  }
+  .photo-caption-wrap input:focus { border-color: var(--rose); }
+
+  .photo-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem; margin-top: 2rem;
+  }
+  .photo-item {
+    position: relative; border-radius: 4px; overflow: hidden;
+    background: white; border: 1px solid var(--blush);
+    box-shadow: 0 2px 12px rgba(192,104,122,0.08);
+    animation: fadeIn 0.4s ease;
+  }
+  .photo-item img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
+  .photo-caption { padding: 0.6rem 0.8rem; font-family: 'Cormorant Garamond', serif; font-size: 0.95rem; color: var(--ink); opacity: 0.7; }
+  .photo-del {
+    position: absolute; top: 0.5rem; right: 0.5rem;
+    background: rgba(255,255,255,0.85); border: none; cursor: pointer;
+    width: 26px; height: 26px; border-radius: 50%;
+    font-size: 0.85rem; color: var(--rose);
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .photo-del:hover { background: white; }
+
+  /* ── FLOWERS PAGE ── */
+  .flowers-wrap { max-width: 720px; margin: 0 auto; }
+  .bouquet-stage {
+    background: white; border: 1px solid var(--blush); border-radius: 4px;
+    min-height: 220px; padding: 2rem; text-align: center;
+    position: relative; margin-bottom: 2rem;
+    box-shadow: 0 4px 30px rgba(192,104,122,0.08);
+  }
+  .bouquet-stage .placeholder { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--ink); opacity: 0.3; font-size: 1.1rem; }
+  .bouquet-display { font-size: 2.8rem; letter-spacing: 0.2rem; line-height: 1.7; min-height: 80px; word-break: break-word; }
+  .bouquet-msg { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--deep-rose); margin-top: 0.8rem; font-style: italic; }
+
+  .flower-picker {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 0.8rem; margin-bottom: 1.5rem;
+  }
+  .flower-choice {
+    background: white; border: 1px solid var(--blush); border-radius: 4px;
+    padding: 0.8rem 0.5rem; cursor: pointer; text-align: center;
+    transition: all 0.15s; user-select: none;
+  }
+  .flower-choice:hover { border-color: var(--rose); transform: scale(1.05); background: var(--soft); }
+  .flower-choice .f-emoji { font-size: 2rem; display: block; }
+  .flower-choice .f-name { font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink); opacity: 0.5; margin-top: 0.3rem; }
+
+  .bouquet-msg-input {
+    width: 100%; border: 1px solid var(--blush); border-radius: 2px;
+    padding: 0.75rem 1rem; margin-bottom: 1rem;
+    font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: var(--ink);
+    outline: none; background: white;
+  }
+  .bouquet-msg-input:focus { border-color: var(--rose); }
+
+  .bouquet-actions { display: flex; gap: 0.8rem; }
+  .btn-outline {
+    flex: 1; padding: 0.8rem;
+    border: 1px solid var(--rose); background: none; cursor: pointer;
+    font-family: 'Montserrat', sans-serif; font-size: 0.75rem; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--rose); border-radius: 2px;
+    transition: all 0.2s;
+  }
+  .btn-outline:hover { background: var(--soft); }
+
+  /* Saved bouquets */
+  .saved-bouquets { margin-top: 2rem; display: flex; flex-direction: column; gap: 0.8rem; }
+  .saved-card {
+    background: white; border: 1px solid var(--blush); border-radius: 4px;
+    padding: 1rem 1.4rem; display: flex; align-items: center; gap: 1rem;
+    position: relative;
+  }
+  .saved-card .sc-flowers { font-size: 1.5rem; letter-spacing: 0.1rem; }
+  .saved-card .sc-msg { font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: var(--deep-rose); font-style: italic; flex: 1; }
+  .saved-card .sc-date { font-size: 0.7rem; color: var(--ink); opacity: 0.3; }
+
+  /* Confetti burst */
+  .confetti-burst {
+    position: fixed; inset: 0; pointer-events: none; z-index: 300;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .confetti-piece {
+    position: absolute;
+    font-size: 1.5rem;
+    animation: burst 1s ease-out forwards;
+  }
+  @keyframes burst {
+    0% { opacity: 1; transform: translate(0,0) scale(0.5); }
+    100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(1.2); }
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--deep-rose); color: white;
+    padding: 0.75rem 1.8rem; border-radius: 2rem;
+    font-size: 0.82rem; letter-spacing: 0.08em;
+    opacity: 0; transition: all 0.3s; z-index: 400; pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 600px) {
+    .nav-logo { display: none; }
+    .tab-btn { padding: 0.5rem 0.75rem; font-size: 0.7rem; }
+    .letter-paper { padding: 1.5rem; }
+    .flower-picker { grid-template-columns: repeat(4, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- Petal rain -->
+<div class="petals-container" id="petals"></div>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-logo">For You, My Love 💌</div>
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('letters')">✉ Letters</button>
+    <button class="tab-btn" onclick="switchTab('photos')">📷 Photos</button>
+    <button class="tab-btn" onclick="switchTab('flowers')">🌸 Flowers</button>
+  </div>
+</nav>
+
+<!-- ═══ LETTERS PAGE ═══ -->
+<div class="page active" id="page-letters">
+  <h1 class="page-title">Write a Letter</h1>
+  <p class="page-subtitle">Pour your heart out</p>
+  <div class="letter-wrap">
+    <div class="letter-paper">
+      <div class="letter-header">
+        <div class="letter-date" id="letter-date"></div>
+        <div class="letter-to-wrap">
+          <input type="text" id="letter-to" placeholder="My dearest…" maxlength="40">
+        </div>
+      </div>
+      <hr class="letter-sep">
+      <textarea class="letter-field letter-body" id="letter-body" placeholder="Write what's in your heart…"></textarea>
+      <div class="letter-footer">
+        <div class="letter-sig">
+          <input type="text" id="letter-sig" placeholder="Always yours," maxlength="40">
+        </div>
+      </div>
+    </div>
+    <button class="send-btn" onclick="sendLetter()">✉ Send Letter</button>
+
+    <div class="letters-list" id="letters-list"></div>
+  </div>
+</div>
+
+<!-- Modal to read letter -->
+<div class="modal-overlay" id="letter-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-to" id="modal-to"></div>
+    <hr class="letter-sep">
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-sig" id="modal-sig"></div>
+  </div>
+</div>
+
+<!-- ═══ PHOTOS PAGE ═══ -->
+<div class="page" id="page-photos">
+  <h1 class="page-title">Our Memory Wall</h1>
+  <p class="page-subtitle">Every picture tells a story</p>
+  <div class="photos-wrap">
+    <div class="upload-zone" onclick="document.getElementById('file-input').click()">
+      <div class="upload-icon">🖼️</div>
+      <p>Tap to add a photo</p>
+    </div>
+    <input type="file" id="file-input" accept="image/*" onchange="handlePhoto(this)">
+    <div class="photo-caption-wrap" id="caption-wrap">
+      <input type="text" id="photo-caption" placeholder="Add a sweet caption…" maxlength="80">
+      <button class="send-btn" style="margin-top:0.8rem" onclick="addPhoto()">Add to Wall</button>
+    </div>
+    <div class="photo-grid" id="photo-grid"></div>
+  </div>
+</div>
+
+<!-- ═══ FLOWERS PAGE ═══ -->
+<div class="page" id="page-flowers">
+  <h1 class="page-title">Send Virtual Flowers</h1>
+  <p class="page-subtitle">Because you deserve all the blooms</p>
+  <div class="flowers-wrap">
+    <div class="bouquet-stage">
+      <div id="bouquet-preview">
+        <div class="placeholder">Your bouquet will appear here…</div>
+      </div>
+    </div>
+
+    <div class="flower-picker" id="flower-picker"></div>
+
+    <input type="text" class="bouquet-msg-input" id="bouquet-msg" placeholder="A little note with your bouquet…" maxlength="100">
+    <div class="bouquet-actions">
+      <button class="btn-outline" onclick="clearBouquet()">Clear</button>
+      <button class="send-btn" style="flex:2;margin-top:0" onclick="sendBouquet()">🌸 Send Bouquet</button>
+    </div>
+
+    <div class="saved-bouquets" id="saved-bouquets"></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── State ──
+const state = {
+  letters: JSON.parse(localStorage.getItem('ll_letters') || '[]'),
+  photos:  JSON.parse(localStorage.getItem('ll_photos')  || '[]'),
+  bouquets:JSON.parse(localStorage.getItem('ll_bouquets')|| '[]'),
+  currentBouquet: [],
+  pendingPhoto: null
+};
+
+// ── Flowers data ──
+const flowers = [
+  {e:'🌹',n:'Rose'},{e:'🌷',n:'Tulip'},{e:'🌸',n:'Blossom'},{e:'💐',n:'Bouquet'},
+  {e:'🌺',n:'Hibiscus'},{e:'🌻',n:'Sunflower'},{e:'🪷',n:'Lotus'},{e:'🌼',n:'Daisy'},
+  {e:'💮',n:'White Flower'},{e:'🌿',n:'Greenery'},{e:'🍃',n:'Leaves'},{e:'✨',n:'Sparkle'}
+];
+
+// ── Tab switch ──
+function switchTab(tab) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-'+tab).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ── Toast ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ── Date ──
+document.getElementById('letter-date').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+// ── Letters ──
+function sendLetter() {
+  const to   = document.getElementById('letter-to').value.trim()   || 'My dearest';
+  const body = document.getElementById('letter-body').value.trim();
+  const sig  = document.getElementById('letter-sig').value.trim()  || 'Always yours';
+  if (!body) { showToast('Please write something first 💌'); return; }
+  state.letters.unshift({ id: Date.now(), to, body, sig, date: new Date().toLocaleDateString() });
+  localStorage.setItem('ll_letters', JSON.stringify(state.letters));
+  document.getElementById('letter-body').value = '';
+  renderLetters();
+  burst();
+  showToast('Letter sent with love 💌');
+}
+function renderLetters() {
+  const list = document.getElementById('letters-list');
+  if (!state.letters.length) { list.innerHTML = ''; return; }
+  list.innerHTML = state.letters.map((l,i) => `
+    <div class="letter-card" onclick="openLetter(${i})">
+      <div class="letter-card-to">To: ${esc(l.to)}</div>
+      <div class="letter-card-preview">${esc(l.body)}</div>
+      <div class="letter-card-date">${l.date}</div>
+      <button class="delete-btn" onclick="event.stopPropagation();deleteLetter(${i})">✕</button>
+    </div>`).join('');
+}
+function openLetter(i) {
+  const l = state.letters[i];
+  document.getElementById('modal-to').textContent = 'To: '+l.to;
+  document.getElementById('modal-body').textContent = l.body;
+  document.getElementById('modal-sig').textContent = '— '+l.sig;
+  document.getElementById('letter-modal').classList.add('open');
+}
+function closeModal() { document.getElementById('letter-modal').classList.remove('open'); }
+function deleteLetter(i) { state.letters.splice(i,1); localStorage.setItem('ll_letters',JSON.stringify(state.letters)); renderLetters(); }
+document.getElementById('letter-modal').addEventListener('click', e => { if(e.target===e.currentTarget) closeModal(); });
+
+// ── Photos ──
+function handlePhoto(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    state.pendingPhoto = e.target.result;
+    document.getElementById('caption-wrap').style.display = 'block';
+    input.value = '';
+  };
+  reader.readAsDataURL(file);
+}
+function addPhoto() {
+  if (!state.pendingPhoto) return;
+  const caption = document.getElementById('photo-caption').value.trim();
+  state.photos.unshift({ id: Date.now(), src: state.pendingPhoto, caption });
+  localStorage.setItem('ll_photos', JSON.stringify(state.photos));
+  state.pendingPhoto = null;
+  document.getElementById('photo-caption').value = '';
+  document.getElementById('caption-wrap').style.display = 'none';
+  renderPhotos();
+  burst();
+  showToast('Photo added to your wall 📷');
+}
+function renderPhotos() {
+  const grid = document.getElementById('photo-grid');
+  grid.innerHTML = state.photos.map((p,i) => `
+    <div class="photo-item">
+      <img src="${p.src}" alt="memory">
+      ${p.caption ? `<div class="photo-caption">${esc(p.caption)}</div>` : ''}
+      <button class="photo-del" onclick="deletePhoto(${i})">✕</button>
+    </div>`).join('');
+}
+function deletePhoto(i) { state.photos.splice(i,1); localStorage.setItem('ll_photos',JSON.stringify(state.photos)); renderPhotos(); }
+
+// ── Flowers ──
+function renderFlowerPicker() {
+  document.getElementById('flower-picker').innerHTML = flowers.map(f =>
+    `<div class="flower-choice" onclick="addFlower('${f.e}')">
+      <span class="f-emoji">${f.e}</span>
+      <div class="f-name">${f.n}</div>
+    </div>`).join('');
+}
+function addFlower(e) {
+  if (state.currentBouquet.length >= 20) return;
+  state.currentBouquet.push(e);
+  updateBouquetPreview();
+}
+function updateBouquetPreview() {
+  const p = document.getElementById('bouquet-preview');
+  if (!state.currentBouquet.length) {
+    p.innerHTML = '<div class="placeholder">Your bouquet will appear here…</div>'; return;
+  }
+  p.innerHTML = `<div class="bouquet-display">${state.currentBouquet.join(' ')}</div>`;
+}
+function clearBouquet() { state.currentBouquet = []; updateBouquetPreview(); document.getElementById('bouquet-msg').value = ''; }
+function sendBouquet() {
+  if (!state.currentBouquet.length) { showToast('Pick some flowers first 🌸'); return; }
+  const msg = document.getElementById('bouquet-msg').value.trim();
+  state.bouquets.unshift({ id: Date.now(), flowers: [...state.currentBouquet], msg, date: new Date().toLocaleDateString() });
+  localStorage.setItem('ll_bouquets', JSON.stringify(state.bouquets));
+  clearBouquet();
+  renderBouquets();
+  burst();
+  showToast('Bouquet sent with all my love 🌸');
+}
+function renderBouquets() {
+  const el = document.getElementById('saved-bouquets');
+  el.innerHTML = state.bouquets.map((b,i) => `
+    <div class="saved-card">
+      <div class="sc-flowers">${b.flowers.join('')}</div>
+      <div class="sc-msg">${b.msg ? esc(b.msg) : '<em style="opacity:0.4">No note</em>'}</div>
+      <div>
+        <div class="sc-date">${b.date}</div>
+        <button class="delete-btn" style="position:static;margin-top:0.3rem;display:block" onclick="deleteBouquet(${i})">✕</button>
+      </div>
+    </div>`).join('');
+}
+function deleteBouquet(i) { state.bouquets.splice(i,1); localStorage.setItem('ll_bouquets',JSON.stringify(state.bouquets)); renderBouquets(); }
+
+// ── Confetti burst ──
+function burst() {
+  const c = document.createElement('div'); c.className = 'confetti-burst';
+  const emojis = ['💕','🌹','✨','💌','🌸','💫','🎀','🌷'];
+  for (let i=0;i<18;i++) {
+    const p = document.createElement('div'); p.className = 'confetti-piece';
+    const angle = (i/18)*360; const dist = 120+Math.random()*80;
+    p.style.cssText = `--tx:${Math.cos(angle*Math.PI/180)*dist}px;--ty:${Math.sin(angle*Math.PI/180)*dist}px;left:50%;top:50%;`;
+    p.textContent = emojis[i%emojis.length];
+    c.appendChild(p);
+  }
+  document.body.appendChild(c);
+  setTimeout(() => c.remove(), 1100);
+}
+
+// ── Petal rain ──
+function spawnPetal() {
+  const p = document.createElement('div'); p.className='petal';
+  p.textContent = ['🌸','🌷','🌹','💮','✿','❀'][Math.floor(Math.random()*6)];
+  p.style.left = Math.random()*100+'vw';
+  const dur = 6+Math.random()*8;
+  p.style.animationDuration = dur+'s';
+  p.style.animationDelay = (-Math.random()*dur)+'s';
+  p.style.fontSize = (0.8+Math.random()*0.8)+'rem';
+  document.getElementById('petals').appendChild(p);
+  setTimeout(()=>p.remove(), (dur+1)*1000);
+}
+setInterval(spawnPetal, 700);
+for(let i=0;i<6;i++) spawnPetal();
+
+// ── Escape HTML ──
+function esc(s) { const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+
+// ── Init ──
+renderLetters(); renderPhotos(); renderBouquets(); renderFlowerPicker();
+</script>
+</body>
+</html>
